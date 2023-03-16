@@ -86,6 +86,11 @@ export default async function handler(
 
     console.log("INSIDE POST", req.body.text);
 
+    console.log(
+      "IN POST process.env.OPENAI_API_KEY",
+      process.env.OPENAI_API_KEY
+    );
+
     const responseText = await generateResponse(userText);
 
     console.log("RESPONSE", responseText);
