@@ -36,6 +36,8 @@ function runMiddleware(
 }
 
 const generateResponse = async (prompt: string) => {
+  console.log("prompt", prompt);
+
   // const response = await OpenAIClient.createCompletion({
   //   model: "text-davinci-003",
   //   prompt,
@@ -43,6 +45,8 @@ const generateResponse = async (prompt: string) => {
   //   temperature: 0,
   // });
   // const responseText = response.data.choices[0].text;
+
+  console.log("OPENAI CLIENT", OpenAIClient);
 
   const response = await OpenAIClient.createChatCompletion({
     model: "gpt-3.5-turbo",
@@ -56,7 +60,11 @@ const generateResponse = async (prompt: string) => {
     ],
   });
 
+  console.log("done with response", response);
+
   const responseText = response.data.choices[0].message.content;
+
+  console.log("RESPONSE TEXT IN FUNC", responseText);
 
   return responseText;
 };
