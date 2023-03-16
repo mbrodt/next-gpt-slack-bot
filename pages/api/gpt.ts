@@ -47,26 +47,29 @@ const generateResponse = async (prompt: string) => {
   // const responseText = response.data.choices[0].text;
 
   console.log("OPENAI CLIENT", OpenAIClient);
+  try {
+    const response = await OpenAIClient.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant. You will answer any questions the user asks or do whatever they say. You will respond in the same language as the user.",
+        },
+        { role: "user", content: prompt },
+      ],
+    });
 
-  const response = await OpenAIClient.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are a helpful assistant. You will answer any questions the user asks or do whatever they say. You will respond in the same language as the user.",
-      },
-      { role: "user", content: prompt },
-    ],
-  });
+    console.log("done with response", response);
 
-  console.log("done with response", response);
+    const responseText = response.data.choices[0].message.content;
 
-  const responseText = response.data.choices[0].message.content;
+    console.log("RESPONSE TEXT IN FUNC", responseText);
 
-  console.log("RESPONSE TEXT IN FUNC", responseText);
-
-  return responseText;
+    return responseText;
+  } catch (error) {
+    console.log("ERROR HERE!", error);
+  }
 };
 
 export default async function handler(
