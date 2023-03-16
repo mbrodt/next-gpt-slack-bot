@@ -86,6 +86,8 @@ export default async function handler(
       text: `\n>${userText}.\n *Genererer svar...*`,
     });
 
+    console.log("INSIDE POST");
+
     const responseText = await generateResponse(userText);
 
     fetch(responseUrl, {
