@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import Cors from "cors";
 import { Configuration, OpenAIApi } from "openai";
-// const { Configuration, OpenAIApi } = require("openai");
-require("dotenv").config();
+import Cors from "cors";
 
 console.log("process.env.OPENAI_API_KEY", process.env.OPENAI_API_KEY);
 console.log("process.env.OPENAI_ORGANIZATION", process.env.OPENAI_ORGANIZATION);
