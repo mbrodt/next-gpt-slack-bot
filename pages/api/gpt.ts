@@ -70,6 +70,12 @@ export default async function handler(
   // Run the middleware
   await runMiddleware(req, res, cors);
 
+  if (req.method === "GET") {
+    res.json(
+      'This endpoint only accepts POST requests. Try sending a POST request to "/api/gpt" instead.'
+    );
+  }
+
   // Check if the request is a POST request
   if (req.method === "POST") {
     const userText = req.body.text;
