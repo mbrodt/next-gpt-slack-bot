@@ -86,9 +86,11 @@ export default async function handler(
       text: `\n>${userText}.\n *Genererer svar...*`,
     });
 
-    console.log("INSIDE POST");
+    console.log("INSIDE POST", req.body.text);
 
     const responseText = await generateResponse(userText);
+
+    console.log("RESPONSE", responseText);
 
     fetch(responseUrl, {
       method: "POST",
@@ -98,6 +100,8 @@ export default async function handler(
       body: JSON.stringify({
         text: responseText,
       }),
+    }).then((res) => {
+      console.log("DONE POSTING TO SLACK", res);
     });
   }
 }
