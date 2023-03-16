@@ -2,6 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
 import Cors from "cors";
 
+export const config = {
+  runtime: "edge",
+};
 console.log("process.env.OPENAI_API_KEY", process.env.OPENAI_API_KEY);
 console.log("process.env.OPENAI_ORGANIZATION", process.env.OPENAI_ORGANIZATION);
 
