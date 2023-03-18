@@ -164,6 +164,11 @@ delayed-stream@~1.0.0:
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
 
+edge-cors@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/edge-cors/-/edge-cors-0.2.1.tgz#3c5b0cbae086329b538c6b648b7f5f834f2ff88c"
+  integrity sha512-ti3F5g96Dx99/+CCPuNpmN0gO5eIxMOTwyMMgNTpxs2rXsmpg6A76yVQZkaKVroWJfJeH6slRqL1HNE52yr5TA==
+
 follow-redirects@^1.14.8:
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
