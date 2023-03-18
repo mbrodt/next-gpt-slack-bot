@@ -68,7 +68,12 @@ const generateResponse = async (prompt: string) => {
 
     return responseText;
   } catch (error) {
-    console.log("ERROR HERE!", error);
+    if (error.response) {
+      console.log("error status", error.response.status);
+      console.log("error data", error.response.data);
+    } else {
+      console.log("error message", error.message);
+    }
   }
 };
 
@@ -102,8 +107,9 @@ export default async function handler(
       process.env.OPENAI_API_KEY
     );
 
-    const responseText = await generateResponse(userText);
+    // const responseText = await generateResponse(userText);
 
+    const responseText = req.body.text;
     console.log("RESPONSE", responseText);
 
     fetch(responseUrl, {
