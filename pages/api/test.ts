@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextFetchEvent, NextRequest } from "next/server";
 // import { Configuration, OpenAIApi } from "openai";
 import cors from "edge-cors";
 
@@ -44,7 +44,10 @@ const generateResponse = async (prompt: string) => {
   }
 };
 
-export default async function MyEdgeFunction(request: NextRequest) {
+export default async function MyEdgeFunction(
+  request: NextRequest,
+  event: NextFetchEvent
+) {
   if (request.method === "GET") {
     return cors(
       request,
@@ -57,6 +60,8 @@ export default async function MyEdgeFunction(request: NextRequest) {
   if (request.method === "POST") {
     // const body = await request.json();
 
+    console.log("geo", request.geo);
+
     const body = await request.formData();
     console.log("body:", body);
 
@@ -65,33 +70,24 @@ export default async function MyEdgeFunction(request: NextRequest) {
     const responseUrl = body.get("response_url") as string;
     console.log("responseUrl:", responseUrl);
 
-    // res.json({response_type: 'in_channel', text:"Request received! Generating response..."});
-    // res.json({
-    //   text: `\n>${userText}.\n *Genererer svar...*`,
-    // });
+    event.waitUntil(
+      generateResponse(userText).then((responseText) => {
+        console.log("RESPONSE TEXT", responseText);
 
-    console.log(
-      "IN POST process.env.OPENAI_API_KEY",
-      process.env.OPENAI_API_KEY
+        console.log("posting to responseUrl", responseUrl);
+        fetch(responseUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: responseText,
+          }),
+        }).then((res) => {
+          console.log("DONE POSTING TO SLACK", res);
+        });
+      })
     );
-
-    // const responseText = await generateResponse(userText);
-    generateResponse(userText).then((responseText) => {
-      console.log("RESPONSE TEXT", responseText);
-
-      console.log("posting to responseUrl", responseUrl);
-      fetch(responseUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: responseText,
-        }),
-      }).then((res) => {
-        console.log("DONE POSTING TO SLACK", res);
-      });
-    });
 
     return cors(
       request,
