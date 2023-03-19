@@ -23,7 +23,7 @@ const generateResponse = async (prompt: string) => {
             {
               role: "system",
               content:
-                "You are a helpful assistant. You will answer any questions the user asks or do whatever they say. You will ALWAYS respond in the same language as the user. This will likely be EITHER Danish or English",
+                "You are a helpful assistant in a digital agency. You will answer any questions the user asks or do whatever they say. You will ALWAYS respond in the same language as the user.",
             },
             { role: "user", content: prompt },
           ],
@@ -81,7 +81,7 @@ export default async function MyEdgeFunction(
     return cors(
       request,
       NextResponse.json({
-        text: `> ${userText}\n*Genererer svar...*`,
+        text: `${userText}\n*Genererer svar...*`,
       })
     );
   }
