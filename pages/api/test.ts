@@ -70,7 +70,7 @@ export default async function MyEdgeFunction(
     const responseUrl = body.get("response_url") as string;
     console.log("responseUrl:", responseUrl);
 
-    event.waitUntil(
+    const promise = new Promise((resolve, reject) => {
       generateResponse(userText).then((responseText) => {
         console.log("RESPONSE TEXT", responseText);
 
@@ -85,9 +85,12 @@ export default async function MyEdgeFunction(
           }),
         }).then((res) => {
           console.log("DONE POSTING TO SLACK", res);
+          resolve(res);
         });
-      })
-    );
+      });
+    });
+
+    event.waitUntil(promise);
 
     return cors(
       request,
