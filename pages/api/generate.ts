@@ -1,18 +1,13 @@
 import { NextResponse } from "next/server";
 import { NextFetchEvent, NextRequest } from "next/server";
-// import { Configuration, OpenAIApi } from "openai";
 import cors from "edge-cors";
 
 export const config = {
   runtime: "edge",
+  regions: ["arn1", "fra1"],
 };
 
-console.log("process.env.OPENAI_API_KEY", process.env.OPENAI_API_KEY);
-console.log("process.env.OPENAI_ORGANIZATION", process.env.OPENAI_ORGANIZATION);
-
 const generateResponse = async (prompt: string) => {
-  console.log("prompt", prompt);
-
   try {
     const gptResponse = await fetch(
       "https://api.openai.com/v1/chat/completions",
@@ -52,42 +47,33 @@ export default async function MyEdgeFunction(
     return cors(
       request,
       NextResponse.json(
-        'This endpoint only accepts POST requests. Try sending a POST request to "/api/gpt" instead.'
+        'This endpoint only accepts POST requests. Try sending a POST request to "/api/generate" instead.'
       )
     );
   }
 
   if (request.method === "POST") {
-    // const body = await request.json();
-
     console.log("geo", request.geo);
 
     const body = await request.formData();
-    console.log("body:", body);
 
     const userText = body.get("text") as string;
     console.log("userText:", userText);
     const responseUrl = body.get("response_url") as string;
-    console.log("responseUrl:", responseUrl);
 
-    const promise = new Promise((resolve, reject) => {
-      generateResponse(userText).then((responseText) => {
-        console.log("RESPONSE TEXT", responseText);
-
-        console.log("posting to responseUrl", responseUrl);
-        fetch(responseUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text: responseText,
-          }),
-        }).then((res) => {
-          console.log("DONE POSTING TO SLACK", res);
-          resolve(res);
-        });
+    const promise = new Promise(async (resolve, reject) => {
+      const responseText = await generateResponse(userText);
+      const slackResponse = await fetch(responseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: responseText,
+        }),
       });
+      console.log("done posting to Slack");
+      resolve(slackResponse);
     });
 
     event.waitUntil(promise);
@@ -95,7 +81,7 @@ export default async function MyEdgeFunction(
     return cors(
       request,
       NextResponse.json({
-        text: `*${userText}*\n_Genererer svar..._`,
+        text: `> ${userText}\n*Genererer svar...*`,
       })
     );
   }

@@ -107,16 +107,12 @@ export default async function handler(
       process.env.OPENAI_API_KEY
     );
 
-    // const responseText = await generateResponse(userText);
+    const responseText = await generateResponse(userText);
 
-    const responseText = req.body.text;
     console.log("RESPONSE", responseText);
 
     console.log("posting to responseUrl", responseUrl);
 
-    setTimeout(() => {
-      console.log("TIMEOUT DONE");
-    }, 3000);
     fetch(responseUrl, {
       method: "POST",
       headers: {
